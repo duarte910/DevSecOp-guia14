@@ -2,11 +2,14 @@
 
 ## Objetivo
 
-En esta guía vas a integrar Threagile al pipeline de CI/CD de la Notes App. El objetivo es describir la arquitectura que construiste hasta TP12, analizar sus riesgos y generar un reporte actualizado cada vez que cambie el modelo.
+En esta guía se va a integrar Threagile al pipeline de CI/CD de la Notes App. El objetivo es describir la arquitectura contruida hasta TP12, analizar sus riesgos y generar un reporte actualizado cada vez que cambie el modelo.
 
 Threagile es una herramienta de modelado de amenazas. La arquitectura se escribe en un archivo YAML que se guarda junto con el código. De esta manera, el modelo puede validarse en la computadora del alumno y también desde GitHub Actions.
 
 ## Prerrequisitos
+
+Se parte como base del repositorio proporcionado por la cátedra [Repositorio Oficial - DevSecOpc-guia14](https://github.com/operaciones2-unahur/trabajo-14)
+
 
 - Docker, Git, Python 3 con PyYAML y un repositorio de GitHub configurado.
 - Base integrada hasta TP12. Su preparación completa, TLS y comprobaciones están en [`devops-tp12/README.md`](devops-tp12/README.md).
@@ -34,7 +37,7 @@ raíz-del-repositorio/             # ejecutar Git y editar .github aquí
 
 Las carpetas `guia-06` a `guia-12` se conservan como antecedentes y material de los trabajos previos. En TP14 no hay que editarlas: el procedimiento se realiza sobre `devops-tp12/` y sobre el workflow de la raíz.
 
-Al abrir una terminal, entrá en el repositorio:
+Se abre la terminal y se ingresa al siguiente repositorio:
 
 ```bash
 cd guia-14-para-alumnos
@@ -44,7 +47,9 @@ cd guia-14-para-alumnos
 
 Directorio: raíz del repositorio.
 
-Si todavía no preparaste la base, seguí `devops-tp12/README.md` antes de continuar. La configuración TLS forma parte de esa base integrada y no agrega un paso nuevo al TP14.
+Si aún no se cuenta con la base preparada, se debe seguir `devops-tp12/README.md` antes de continuar. 
+La configuración TLS forma parte de esa base integrada y no agrega un paso nuevo al TP14.
+
 
 ## Paso 2: Generar un modelo de amenazas inicial (Stub Model).
 
@@ -66,13 +71,13 @@ mv threagile-stub-model.yaml threagile.yaml
 
 ## Paso 4: Adaptar el modelo a la arquitectura de la Notes App.
 
-Abrí el archivo desde `devops-tp12/`:
+Se debe abrir el archivo desde `devops-tp12/`:
 
 ```bash
 nano threagile.yaml
 ```
 
-Reemplazá todo por el bloque siguiente. En nano: `Ctrl+O`, `Enter` para guardar y `Ctrl+X` para salir.
+Reemplazar todo por el bloque siguiente. En nano: `Ctrl+O`, `Enter` para guardar y `Ctrl+X` para salir.
 
 <!-- BEGIN THREAGILE_MODEL -->
 ```yaml
@@ -636,7 +641,7 @@ risk_tracking:
 ```
 <!-- END THREAGILE_MODEL -->
 
-Antes de guardar, reemplazá `TU_USUARIO` por tu usuario de GitHub. No cambies los identificadores del modelo: el bloque de `risk_tracking` depende de ellos.
+Antes de guardar, se debe reemplazar `TU_USUARIO` por el usuario utilizado de GitHub. No se deben cambiar los identificadores del modelo: el bloque de `risk_tracking` depende de ellos.
 
 Las cinco partes conceptuales son:
 
@@ -664,25 +669,27 @@ El activo `docker-registry` representa Docker Hub. El pipeline anterior publica 
 
 ## Paso 5: Validar la sintaxis de tu modelo localmente.
 
-Ejecutá el modelo desde `devops-tp12/`:
+Se ejecuta el modelo desde `devops-tp12/`:
 
 ```bash
 docker run --rm -v "$(pwd)":/app/work threagile/threagile:latest \
   --verbose --model /app/work/threagile.yaml --output /app/work
 ```
 
-Al terminar deben aparecer `report.pdf`, `data-flow-diagram.png` y `risks.json`. Los IDs de `risk_tracking` incluidos en el modelo fueron comprobados con Threagile 1.0.0.
+Al finalizar deben aparecer `report.pdf`, `data-flow-diagram.png` y `risks.json`. Los IDs de `risk_tracking` incluidos en el modelo fueron comprobados con Threagile 1.0.0.
 
 ## Paso 6: Integrar Threagile en tu Pipeline (cicd.yml).
 
-Volvé a la raíz y editá el workflow real; no uses el de `devops-TP06/`.
+Se debe volver a la raíz y editar el workflow real; no utilizar el de `devops-TP06/`.
 
 ```bash
 cd ..
 nano .github/workflows/cicd.yml
 ```
 
-Al final de `jobs:`, al mismo nivel que los jobs existentes, pegá y guardá con `Ctrl+O`, `Enter`, `Ctrl+X`:
+Tras el último job, se debe agregar el siguiente job denominado Threat Model Analysis, con el mismo nivel jerárquico que las tareas precedentes. 
+
+Guardar con `Ctrl+O`, `Enter`, `Ctrl+X`:
 
 <!-- BEGIN THREAT_MODELING_JOB -->
 ```yaml
@@ -710,7 +717,8 @@ Al final de `jobs:`, al mismo nivel que los jobs existentes, pegá y guardá con
 ```
 <!-- END THREAT_MODELING_JOB -->
 
-Guardá el archivo sin reemplazar los jobs `lint`, `test`, `test-integrated-app` y `build-push`.
+Guardar el archivo sin reemplazar los jobs `lint`, `test`, `test-integrated-app` y `build-push`.
+De esta forma se adiciona la ejecución automatizada del análisis de seguridad mediante la acción oficial de Threagile. 
 
 ## Paso 7: Agregar los archivos al control de versiones de Git.
 
@@ -734,4 +742,4 @@ git push origin main
 
 ## Paso 10: Verificar que el pipeline funciona correctamente.
 
-En GitHub, abrí el repositorio y entrá en **Actions**. Seleccioná la ejecución correspondiente al commit del TP14 y verificá que el job **Threat Model Analysis** termine en verde. Al pie de la ejecución, descargá el artifact **threagile-report** y adjuntalo a la presentación.
+En GitHub, abrir el repositorio y entrar en **Actions**. Seleccionar la ejecución correspondiente al commit del TP14 y verificar que el job **Threat Model Analysis** se haya ejecutado de forma correcta. Al pie de la ejecusión se encuentra el artifact **threagile-report** disponible para ser descargado y analizado.
