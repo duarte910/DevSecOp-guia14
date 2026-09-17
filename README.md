@@ -14,6 +14,7 @@ Se parte como base del repositorio proporcionado por la cátedra [Repositorio Of
 - Docker, Git, Python 3 con PyYAML y un repositorio de GitHub configurado.
 - Base integrada hasta TP12. Su preparación completa, TLS y comprobaciones están en [`devops-tp12/README.md`](devops-tp12/README.md).
 - Pipeline previo en `.github/workflows/cicd.yml`.
+- Configurar en el repositorio de GitHub los secrets obligatorios (DOCKERHUB_USERNAME y DOCKERHUB_TOKEN) en la sección Settings > Secrets and variables > Actions, para permitir la autenticación con Docker Hub.
 
 Esta versión fue comprobada con Threagile 1.0.0. Los identificadores de riesgo pueden cambiar entre versiones; por eso se obtienen de la primera ejecución y no se escriben de memoria.
 
@@ -678,6 +679,9 @@ docker run --rm -v "$(pwd)":/app/work threagile/threagile:latest \
 
 Al finalizar deben aparecer `report.pdf`, `data-flow-diagram.png` y `risks.json`. Los IDs de `risk_tracking` incluidos en el modelo fueron comprobados con Threagile 1.0.0.
 
+<img width="1302" height="257" alt="image" src="https://github.com/user-attachments/assets/8b5776e5-1b58-488a-82aa-9bb15e8cba92" />
+
+
 ## Paso 6: Integrar Threagile en tu Pipeline (cicd.yml).
 
 Se debe volver a la raíz y editar el workflow real; no utilizar el de `devops-TP06/`.
@@ -743,3 +747,14 @@ git push origin main
 ## Paso 10: Verificar que el pipeline funciona correctamente.
 
 En GitHub, abrir el repositorio y entrar en **Actions**. Seleccionar la ejecución correspondiente al commit del TP14 y verificar que el job **Threat Model Analysis** se haya ejecutado de forma correcta. Al pie de la ejecusión se encuentra el artifact **threagile-report** disponible para ser descargado y analizado.
+
+<img width="1497" height="441" alt="image" src="https://github.com/user-attachments/assets/c3754eb3-4f4e-4d9f-9531-ae7c69f3041d" />
+
+<img width="1513" height="631" alt="image" src="https://github.com/user-attachments/assets/815e1045-b659-4c6a-a7d1-6e71f35dca0b" /> 
+
+<img width="1170" height="282" alt="image" src="https://github.com/user-attachments/assets/fab0bed0-ded1-43f3-a467-3990bfc4263c" />
+
+
+
+
+
